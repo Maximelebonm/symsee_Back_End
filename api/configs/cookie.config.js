@@ -9,11 +9,11 @@ if(process.env.NODE_ENV === "development"){
 }
 else if(process.env.NODE_ENV === "production"){
     cookieConfig ={
-        domain: 'www.symsee.fr',
+        domain: '.symsee.fr',
         path: '/',
         sameSite:'none',
         secure : true,
-        httpOnly: false,
+        httpOnly: true,
         maxAge : 864000000,
     }
 }

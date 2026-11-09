@@ -1,15 +1,22 @@
-let storageConfig
+let storageConfigDoc;
+let storageDocExist;
+let storageConfigMedia;
+let storageMediaExist;
+const date = new Date;
+const options = { month: 'long' };
+
 if(process.env.NODE_ENV === "development"){
-    storageConfig = {
-        storageImage : '__dirname, ../../storage',
-        storageDoc : '__dirname, ../../documents'
-    }
+    storageConfigDoc = '__dirname, ../../storage/documents/' + date.getFullYear() + '/' + date.toLocaleDateString('fr-FR', options) + '/';
+    storageDocExist = 'storage/documents/' + date.getFullYear() + '/' + date.toLocaleDateString('fr-FR', options) + '/';
+    storageConfigMedia = '__dirname, ../../storage/Medias/' + date.getFullYear();
+    storageMediaExist = 'storage/Medias/' + date.getFullYear() + '/';
       
 } else {
-    storageConfig = {
-        storageImage : process.env.STORAGE_PROD + '/storage',
-        storageDoc : process.env.STORAGE_PROD + '/documents'
-    }
+
+    storageConfigDoc =  'storage/documents/' + date.getFullYear() + '/' + date.toLocaleDateString('fr-FR', options) + '/'
+    storageDocExist = 'storage/documents/' + date.getFullYear() + '/' + date.toLocaleDateString('fr-FR', options) + '/';
+    storageConfigMedia = 'storage/Medias/' + date.getFullYear();
+    storageMediaExist = 'storage/Medias/' + date.getFullYear() + '/';
 }
 
-module.exports = storageConfig
+module.exports = {storageConfigDoc, storageConfigMedia, storageDocExist, storageMediaExist}

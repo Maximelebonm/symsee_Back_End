@@ -13,6 +13,7 @@ const roleSchema = db.define(
         name : {
             type : DataTypes.CHAR,
             allowNull : false,
+            unique : true,
         },
         created_by : {
             type : DataTypes.CHAR,

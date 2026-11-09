@@ -30,6 +30,7 @@ const createAppelDoffre = async (req) => {
             structure : req.body.structure,
             created_by : req.user.firstName + ' ' + req.user.lastName,
             Id_user : req.user.Id_user,
+            created_date: Date.now(),
         })
         return appelDoffre
     }

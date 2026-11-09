@@ -1,57 +1,70 @@
-const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 const userService = require('../services/user.service');
 const { decodeToken } = require('../security/auth.security');
-require('dotenv').config()
+require('dotenv').config();
 
 const parseCookies = (cookieHeader) => {
     const cookies = {};
+    if (!cookieHeader) return cookies;
 
     cookieHeader.split('; ').forEach(cookie => {
-      const [name, ...rest] = cookie.split('=');
-      cookies[name.trim()] = rest.join('=').trim();
+        const [name, ...rest] = cookie.split('=');
+        cookies[name.trim()] = rest.join('=').trim();
     });
     return cookies;
-  };
+};
 
-const protect = asyncHandler(
-    async (req,res,next) => {
-        const cookieauth = parseCookies(req.headers.cookie)
-        let token;
-        if(req.headers.cookie && cookieauth.auth){
-            try {
-                /* 
-                    prendre de le jeton et le diviser en un tableau
-                    le 2eme element est le jeton
-                */
-                const cookies = parseCookies(req.headers.cookie);
-                token = cookies.auth;
-        
-                const decoded = decodeToken(token);
-                /* 
-                    trouver l'utilisateur par l'ID puis prendre les infos sauf
-                    le mot de passe.
-                */
-               if(decoded){
-                   const user = await userService.findOneUserByID(decoded.Id_user);
-                   req.user = user;
-                   if(user)
-                   next();
-               }
-               else {
-                    res.status(401).send({message : "Vous n'êtes pas autorisé à faire cela"})
-               }
-            } catch (err) {
-                console.error(err);
-                res.status(401).send({message : "Vous n'êtes pas autorisé à faire cela"})
-                //.send({message : err})
-                throw new Error("non autorisé, token échoué")
-            }
-        } else if(!token){
-            res.status(401).send({message : "vous n'êtes pas autorisé à faire cela"})
-            throw new Error("pas autorisé , pas de token")
-        }
+const protect = asyncHandler(async (req, res, next) => {
+    const cookies = parseCookies(req.headers.cookie);
+    const token = cookies.auth;
+    
+    if (!token) {
+        return res.status(401).json({ message: "Vous n'êtes pas autorisé à faire cela" });
     }
-)
 
-module.exports = protect
+    let decoded;
+    try {
+        decoded = decodeToken(token);
+
+
+
+    } catch (err) {
+        console.error(err);
+        return res.status(401).json({ message: "Vous n'êtes pas autorisé à faire cela" });
+    }
+
+    if (!decoded) {
+        return res.status(401).json({ message: "Vous n'êtes pas autorisé à faire cela" });
+    }
+    if (Array.isArray(decoded.role)) {
+        // Ancien format détecté -> on force la reconnexion
+        res.clearCookie('auth');
+        return res.status(401).json({ 
+            message: 'Session expirée, veuillez vous reconnecter',
+            code: 'TOKEN_FORMAT_OUTDATED'
+        });
+    }
+
+    const user = await userService.findOneUserByID(decoded.Id_user);
+
+    if (!user) {
+        return res.status(401).json({ message: "Vous n'êtes pas autorisé à faire cela" });
+    }
+
+    req.user = user;
+    next();
+});
+
+// Middleware pour vérifier le rôle (relation belongsTo, un seul rôle par user)
+const authorize = (...roles) => {
+    return (req, res, next) => {
+        const userRole = req.user?.role?.name;
+        const hasRole = userRole && roles.includes(userRole);
+        if (!hasRole) {
+            return res.status(403).send({ message: "Accès refusé" });
+        }
+        next();
+    }
+}
+
+module.exports = { protect, authorize };

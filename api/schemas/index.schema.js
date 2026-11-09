@@ -2,14 +2,14 @@ const {Sequelize, DataTypes} = require('sequelize')
 const db = require("../configs/db.config");
 
 const articleSchema = require('./article.schema');
-const articleImageSchema = require('./articleImage.schema');
+const articleImageSchema = require('./articleMedia.schema');
 
 const lineArticleSchema = require('./lineArticle.schema');
 const lineArticleImage = require('./lineArticleImage.schema');
 
 const roleSchema = require('./role.schema');
 const userSchema = require('./user.schema');
-const user_roleSchema = require('./user_role.schema');
+// const user_roleSchema = require('./user_role.schema');
 const documentSchema = require('./document.schema');
 const appelOffreSchema = require('./appelDoffre.schema');
 const typeDocumentSchema = require('./typeDocument.schema');
@@ -32,3 +32,15 @@ lineArticleImage.belongsTo(lineArticleSchema, {foreignKey: 'Id_line_Article'});
 
 documentSchema.belongsTo(typeDocumentSchema, {foreignKey: 'Id_typeDocument'});
 typeDocumentSchema.hasMany(documentSchema, {foreignKey: 'Id_typeDocument'});
+
+userSchema.belongsTo(roleSchema, {
+    foreignKey: 'roleName',  // ← C'est la clé étrangère
+    targetKey: 'name',       // ← roleSchema.name (pas l'ID)
+    as: 'role'
+});
+
+roleSchema.hasMany(userSchema, {
+    foreignKey: 'roleName',
+    sourceKey: 'name',       // ← Important !
+    as: 'users'
+});

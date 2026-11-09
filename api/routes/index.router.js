@@ -10,7 +10,10 @@ const documentRoutes = require('./document.router');
 const typeDocumentRoutes = require('./typeDocument.router');
 const appelDoffreRoutes = require('./appelDoffre.router');
 
+
+
 router.use('/user', userRoutes);
+
 router.use('/article', articleRoutes);
 router.use('/document', documentRoutes);
 router.use('/typeDocument', typeDocumentRoutes);

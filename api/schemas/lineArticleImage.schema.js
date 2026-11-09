@@ -24,6 +24,10 @@ const productImagesSchema = db.define(
             type : DataTypes.FLOAT,
             allowNull : false,
         },
+        position : {
+            type : DataTypes.FLOAT,
+            allowNull : false,
+        },
         archived : {
             type : DataTypes.BOOLEAN,
             allowNull : false,

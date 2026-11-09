@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const protect = require('../middlewares/auth.middleware');
+const {protect} = require('../middlewares/auth.middleware');
 const appelDoffreController = require('../controllers/appelDoffre.controller');
 
 router.get("/", appelDoffreController.getAllAppelDoffres);

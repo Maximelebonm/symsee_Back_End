@@ -17,10 +17,13 @@ const articleSchema = db.define(
         subtitle:{
             type:DataTypes.CHAR,
         },
+        storage : {
+            type : DataTypes.TEXT,
+        },
         description:{
             type:DataTypes.TEXT,
         },
-        media:{
+        lien : {
             type:DataTypes.TEXT,
         },
         visible : {

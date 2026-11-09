@@ -3,57 +3,63 @@ const jwt = require('jsonwebtoken');
 const parseCookies = (cookieHeader) => {
     const cookies = {};
     cookieHeader.split(';').forEach(cookie => {
-      const [name, ...rest] = cookie.split('=');
-      cookies[name.trim()] = rest.join('=').trim();
+        const [name, ...rest] = cookie.split('=');
+        cookies[name.trim()] = rest.join('=').trim();
     });
     return cookies;
-  };
+};
 
 const jwtsecurity = (props) => {
     try {
-        const {Id_user,email,roles,created_by} =props
-        const payload = {Id_user : Id_user, email : email, role : roles, created_by : created_by};
-        return jwt.sign(payload, process.env.JWT_SECRET)
-        
+        const { Id_user, email, role, created_by } = props;
+        const payload = {
+            Id_user,
+            email,
+            role: role?.name ?? null,
+            created_by
+        };
+        return jwt.sign(payload, process.env.JWT_SECRET);
     } catch (error) {
-        return error
+        return error;
     }
 }
 
-const jwtRepassword= (props) => {
-    const {Id_user,email} =props
-    const payload = {Id_user : Id_user, email : email};
-    return jwt.sign(payload, process.env.JWT_SECRET)
+const jwtRepassword = (props) => {
+    const { Id_user, email } = props;
+    const payload = { Id_user, email };
+    return jwt.sign(payload, process.env.JWT_SECRET);
 }
 
 const jwtsecurityValidEmail = (props) => {
-    const {Id_user,email,roles,firstname,lastname,birthdate,phone,password,created_by,identifiant} =props
+    const {
+        Id_user, email, role, firstname, lastname,
+        birthdate, phone, password, created_by, identifiant
+    } = props;
     const payload = {
-        Id_user : Id_user,
-        email : email, 
-        role : roles,
-        firstname : firstname,
-        lastname : lastname,
-        birthdate : birthdate,
-        phone : phone,
-        password : password,
-        created_by : created_by,
+        Id_user,
+        email,
+        role: role?.name ?? null,
+        firstname,
+        lastname,
+        birthdate,
+        phone,
+        password,
+        created_by,
+        identifiant
     };
-    return jwt.sign(payload, process.env.JWT_SECRET)
+    return jwt.sign(payload, process.env.JWT_SECRET);
 }
 
-
-const decodeToken = (token)=> {
-    const decode = jwt.decode(token,process.env.JWT_SECRET)
-    return decode
+const decodeToken = (token) => {
+    const decode = jwt.decode(token, process.env.JWT_SECRET);
+    return decode;
 }
-
 
 /* création et vérification des mots de passe */
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-const hashPassword = async (password)=> {
+const hashPassword = async (password) => {
     try {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         return hashedPassword;
@@ -63,17 +69,22 @@ const hashPassword = async (password)=> {
     }
 }
 
-const comparePassword = async (passwordToCheck,hashedPasswordFromDatabase)=>{
-    try{
+const comparePassword = async (passwordToCheck, hashedPasswordFromDatabase) => {
+    try {
         const PasswordChecked = await bcrypt.compare(passwordToCheck, hashedPasswordFromDatabase);
         return PasswordChecked;
-    }
-    catch (error) {
+    } catch (error) {
         console.error('Erreur lors du hachage du mot de passe :', error);
         throw error;
     }
 }
 
-
-
-module.exports = {parseCookies,jwtsecurity,decodeToken,comparePassword,hashPassword,jwtsecurityValidEmail,jwtRepassword}
+module.exports = {
+    parseCookies,
+    jwtsecurity,
+    decodeToken,
+    comparePassword,
+    hashPassword,
+    jwtsecurityValidEmail,
+    jwtRepassword
+}

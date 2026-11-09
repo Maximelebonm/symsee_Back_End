@@ -2,31 +2,37 @@ const {Sequelize, DataTypes} = require('sequelize')
 const db = require("../configs/db.config")
 
 
-const productImagesSchema = db.define(
-    "articleimage",
+const productMediaSchema = db.define(
+    "articleMedia",
     {
-        Id_article_image : {
+        Id_article_media : {
             type : DataTypes.UUID,
             primaryKey : true,
             allowNull : false,
             defaultValue : Sequelize.UUIDV4,
             unique : true,
         },
-        name : {
-            type : DataTypes.TEXT,
-            allowNull : false,
-        },
         storage : {
             type : DataTypes.TEXT,
             allowNull : false,
         },
+        type : {
+            type : DataTypes.TEXT,
+        },
         order : {
             type : DataTypes.FLOAT,
             allowNull : false,
+            defaultValue : 0,
+        },
+        position : {
+            type : DataTypes.FLOAT,
+            allowNull : false,
+            defaultValue : 0,
         },
         archived : {
             type : DataTypes.BOOLEAN,
             allowNull : false,
+            defaultValue : false,
         },
         created_by : {
             type : DataTypes.CHAR,
@@ -54,8 +60,8 @@ const productImagesSchema = db.define(
     {
         freezeTablename : true,
         timestamps : false,
-        tableName : "articleimage",
+        tableName : "articleMedia",
     }
     )
 
-module.exports = productImagesSchema;
+module.exports = productMediaSchema;

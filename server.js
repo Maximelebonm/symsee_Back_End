@@ -26,7 +26,7 @@ app.use(session({
 }))
 
 
-const port = process.env.PORT || 5000
+const port = config.PORT || 5000
 
 
 app.use("/storage", express.static(path.join(__dirname, './storage')));

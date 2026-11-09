@@ -29,11 +29,9 @@ const documentSchema = db.define(
         storage_doc:{
             type:DataTypes.TEXT,
             allowNull : false,
-            defaultValue : 'test',
         },
         auteur:{
             type:DataTypes.CHAR,
-      
         },
         created_by : {
             type : DataTypes.CHAR,

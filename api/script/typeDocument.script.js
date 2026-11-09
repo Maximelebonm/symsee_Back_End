@@ -1,4 +1,4 @@
-const typeDocumentSchema = require("../schemas/typedocument.schema")
+const typeDocumentSchema = require("../schemas/typeDocument.schema")
 
 const typeInit = async () => {
     try{

@@ -7,7 +7,7 @@ if(process.env.NODE_ENV === "development"){
     }
 } else {
     clearCookieConfig ={
-        domain: '.authenticae.fr',
+        domain: '.symsee.fr',
         path: '/',
         sameSite:'none',
         secure : true,

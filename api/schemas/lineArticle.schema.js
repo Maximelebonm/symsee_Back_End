@@ -22,9 +22,6 @@ const lineArticleSchema = db.define(
         body:{
             type:DataTypes.TEXT,
         },
-        media:{
-            type:DataTypes.TEXT,
-        },
         created_by : {
             type : DataTypes.CHAR,
             allowNull : false,

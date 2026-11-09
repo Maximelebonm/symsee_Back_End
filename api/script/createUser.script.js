@@ -1,5 +1,5 @@
 const roleSchema = require('../schemas/role.schema');
-const typeDocumentSchema = require('../schemas/typedocument.schema')
+const typeDocumentSchema = require('../schemas/typeDocument.schema')
 const userController = require("../controllers/user.controller")
 const userService = require('../services/user.service')
 const roleInit = require('./role.script')
@@ -13,15 +13,36 @@ const roleService = require('../services/role.service');
 
 const adminUser = {
     body : {
-        firstName : 'admin',
-        lastName : 'admin',
-        email : process.env.EMAIL,
-        password : process.env.PASS,
+        firstName : 'Sandrine',
+        lastName : 'LEBON',
+        email : process.env.EMAIL_SL,
+        password : process.env.PASS_SL,
         role : 'administrator',
         created_by : 'script',
     }
 }
 
+const adminUser2 = {
+    body : {
+        firstName : 'Raphael',
+        lastName : 'DELCROIX',
+        email : process.env.EMAIL_RD,
+        password : process.env.PASS_RD,
+        role : 'administrator',
+        created_by : 'script',
+    }
+}
+
+const adminUser3 = {
+    body : {
+        firstName : 'Michael',
+        lastName : 'MEUNIER',
+        email : process.env.EMAIL_MM,
+        password : process.env.PASS_MM,
+        role : 'administrator',
+        created_by : 'script',
+    }
+}
 
 const initData = async ()=> {
     if (!adminUser.body.email || !adminUser.body.password) {
@@ -35,10 +56,12 @@ const initData = async ()=> {
                 const roleInitialized =  await roleInit()
                 const typeDocumentinitialized = await typeDocumentInit()
             if(roleInitialized === "OK"){
-                const userCreated = await userController.registerFirstUser(adminUser)
-                if(userCreated){
-                    const user = await userService.findOneUserByID(userCreated.Id_user)
-                    const addRole = await roleService.addRole(adminUser,user)
+                const userCreated = await userController.registerFirstUser(adminUser);
+                const userCreated2 = await userController.registerFirstUser(adminUser2);
+                const userCreated3 = await userController.registerFirstUser(adminUser3);
+                if(userCreated && userCreated2 && userCreated3){
+                    const user = await userService.findOneUserByID(userCreated.Id_user);
+                    const addRole = await roleService.addRole(adminUser,user);
                     return 'db initialized , userAdmin created';
                 } 
             } else {

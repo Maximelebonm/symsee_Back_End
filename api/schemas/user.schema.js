@@ -33,6 +33,14 @@ const userSchema = db.define(
             type:DataTypes.TEXT,
             allowNull : false,
         },
+        roleName : {
+            type : DataTypes.CHAR,
+            allowNull : true,
+            references : {
+                model : 'role',  // ← Référence la table role
+                key : 'name'     // ← Clé étrangère sur name
+            }
+        },
         created_by : {
             type : DataTypes.CHAR,
             allowNull : false,
@@ -63,5 +71,7 @@ const userSchema = db.define(
         tableName : "users",
     }
 )
+
+
 
 module.exports = userSchema;

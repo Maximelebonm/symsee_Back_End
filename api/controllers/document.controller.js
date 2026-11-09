@@ -2,6 +2,7 @@ const documentServices = require('../services/document.service');
 const typeDocumentServices = require('../services/typeDocument.service');
 const security = require('../security/auth.security');
 const upload = require('../configs/multer.config');
+const storage = require('../configs/storage.config');
 const path = require('path');
 const express = require('express');
 const fs = require('fs');
@@ -27,17 +28,11 @@ const getOneDocument = async (req, res) => {
     }
 }
 
-const createDocument = async (req, res,next) => {
+const createDocument = async (req, res) => {
     try {
-        console.log(next)
-        const pictureConfig = await upload.uploadDocument.single('file')(req, res, async (err) => {
-            if (err) {
-                return res.status(400).send({ message: err.message });
-            }
-            const getTypeOfDocument = await typeDocumentServices.getOneTypeDocument(req.body.type);
+        const getTypeOfDocument = await typeDocumentServices.getOneTypeDocument(req.body.type);
             const newDocument = await documentServices.createDocument(req, getTypeOfDocument);
-            res.status(201).send(pictureConfig);
-        });
+            res.status(200).send(newDocument);
     }
     catch (error) {
         res.status(500).send({ message: error.message });
@@ -46,6 +41,7 @@ const createDocument = async (req, res,next) => {
 
 const updateDocument = async (req, res,next) => {
     try {
+        
             const pictureConfig = await upload.uploadDocument.single('file')(req, res, async (err) => {
                 if (err) {
                     return res.status(400).send({ message: err.message });
@@ -63,7 +59,7 @@ const updateDocument = async (req, res,next) => {
                 const getTypeOfDocument = await typeDocumentServices.getOneTypeDocument(req.body.type);
                 const newDocument = await documentServices.updateDocument(req, getTypeOfDocument);
 
-                res.status(201).send(pictureConfig);
+                res.status(200).send(pictureConfig);
             });
     } catch (error) {
         res.status(500).send({ message: error.message });
